@@ -8,3 +8,6 @@ IN: roaring.tests
 { f } [ <roaring> dup 0b0000000000000100 swap insert 0b10000000000000100 swap query ] unit-test
 { t } [ <roaring> dup 0b00000000000000100 swap insert 0b00000000000000100 swap query ] unit-test
 { t } [ <roaring> dup 0b10000000000000100 swap insert 0b10000000000000100 swap query ] unit-test
+{ t } [ <roaring> dup 0b00000000000000001 swap insert dup 0b10000000000000001 swap insert dup 0b110000000000000001 swap insert 0b0000000000000001 swap query ] unit-test
+{ t } [ <roaring> dup 0b00000000000000001 swap insert dup 0b10000000000000001 swap insert dup 0b110000000000000001 swap insert 0b10000000000000001 swap query ] unit-test
+{ t } [ <roaring> dup 0b00000000000000001 swap insert dup 0b10000000000000001 swap insert dup 0b110000000000000001 swap insert 0b110000000000000001 swap query ] unit-test

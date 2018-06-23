@@ -1,7 +1,7 @@
 ! Copyright (C) 2018 Philip Dexter.
 ! See http://factorcode.org/license.txt for BSD license.
 USING: accessors binary-search kernel locals math math.order sequences
-typed sorting.quick variants vectors bit-sets ;
+typed sorting.quick variants vectors bit-sets sequences.extras ;
 
 IN: roaring
 
@@ -17,7 +17,7 @@ GENERIC: (index) ( key chunk -- ? )
 GENERIC: (set) ( key chunk -- )
 
 M: vector-container (index) vector>> index >boolean ;
-M: vector-container (set) vector>> swap suffix! [ <=> ] sort! ;
+M: vector-container (set) vector>> swap suffix! [ <=> ] sort! ; ! TODO remove this sort
 
 PRIVATE>
 
@@ -43,19 +43,25 @@ TYPED:: insert ( n: fixnum roaring: roaring -- )
     n high43 :> bucket
     n low16 :> key
     bucket roaring parts>> search-bucket [
-        chunk>> :> bs
-        key bs (set)
+        chunk>> :> chunk
+        key chunk (set)
     ] [
-        roaring parts>>
+        roaring parts>> [ bucket>> bucket [ >fixnum ] bi@ <=> ] search
+        bucket>> bucket > [ 1 + ] [ ] if :> index
+        ! roaring parts>>
+        ! bucket key 1vector <vector-container> <part>
+        ! suffix!
+        ! [ bucket>> ] sort-with!
         bucket key 1vector <vector-container> <part>
-        suffix!
-        [ bucket>> ] sort-with!
+        index
+        roaring parts>>
+        insert-nth!
     ] if* ;
 
 TYPED:: query ( n: fixnum roaring: roaring -- ?: boolean )
     n high43 :> bucket
     bucket roaring parts>> search-bucket [
-        chunk>> :> bs
+        chunk>> :> chunk
         n low16 :> key
-        key bs (index)
+        key chunk (index)
     ] [ f ] if* ;
