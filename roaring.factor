@@ -6,7 +6,7 @@ typed sorting.quick variants vectors bit-sets sequences.extras ;
 IN: roaring
 
 VARIANT: chunk
-    bs-container: { { bs bit-set } }
+    bs-container: { { bs bit-set } } ! TODO use this
     vector-container: { { vector vector } }
     ! TODO run-container
     ;
@@ -48,10 +48,6 @@ TYPED:: insert ( n: fixnum roaring: roaring -- )
     ] [
         roaring parts>> [ bucket>> bucket [ >fixnum ] bi@ <=> ] search
         bucket>> bucket > [ 1 + ] [ ] if :> index
-        ! roaring parts>>
-        ! bucket key 1vector <vector-container> <part>
-        ! suffix!
-        ! [ bucket>> ] sort-with!
         bucket key 1vector <vector-container> <part>
         index
         roaring parts>>
